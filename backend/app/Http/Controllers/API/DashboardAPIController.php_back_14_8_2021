@@ -1,0 +1,81 @@
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Models\Department;
+use App\Models\MOS;  
+use Illuminate\Http\Request;
+use App\Http\Controllers\AppBaseController;
+use Response;
+use Auth, DB;
+
+/**
+ * Class DepartmentController
+ * @package App\Http\Controllers\API
+ */
+
+class DashboardAPIController extends AppBaseController
+{
+    public function index(Request $request)
+    {
+        $user_data = Auth::user();
+        if($user_data->role_id == 5 || $user_data->role_id == 6 ||  $user_data->role_id == 7 ){
+            $request['dept_id'] = $user_data->dept_id ;
+        }  
+
+        $achievement_biulder = MOS::select(DB::Raw('SUM(january) as january, SUM(february) as february
+        , SUM(march) as march, SUM(april) as april, SUM(may) as may, SUM(june) as june, SUM(july) as july
+        , SUM(august) as august, SUM(september) as september, SUM(october) as october, SUM(november) as november
+        , SUM(december) as december'))
+            ->join('mos_datas', 'mos_datas.mos_id', 'm_o_s.id');
+        if ($request->dept_id) {
+            $achievement_biulder->where('m_o_s.dept_id', $request->dept_id);
+        }
+        $achievement = $achievement_biulder->where('mos_datas.type', 'achievement')->first();
+
+        $target_biulder = MOS::select(DB::Raw('SUM(january) as january, SUM(february) as february
+        , SUM(march) as march, SUM(april) as april, SUM(may) as may, SUM(june) as june, SUM(july) as july
+        , SUM(august) as august, SUM(september) as september, SUM(october) as october, SUM(november) as november
+        , SUM(december) as december'))
+            ->join('mos_datas', 'mos_datas.mos_id', 'm_o_s.id');
+        if ($request->dept_id) {
+            $target_biulder->where('m_o_s.dept_id', $request->dept_id);
+        }
+        $target = $target_biulder->where('mos_datas.type', 'target')->first();
+       
+        ///$data['target'] = $target;
+        $data['target'] = [
+                            $target->january,
+                            $target->february,
+                            $target->march,
+                            $target->april,
+                            $target->may,
+                            $target->june,
+                            $target->july,
+                            $target->august,
+                            $target->september,
+                            $target->october,
+                            $target->november,
+                            $target->december,
+                        ];
+            $data['achievement'] = [
+                        $achievement->january,
+                        $achievement->february,
+                        $achievement->march,
+                        $achievement->april,
+                        $achievement->may,
+                        $achievement->june,
+                        $achievement->july,
+                        $achievement->august,
+                        $achievement->september,
+                        $achievement->october,
+                        $achievement->november,
+                        $achievement->december,
+                    ];
+       // $data['achievement'] = [10,8,9,11,5,0,0,0,0,0,0,0];
+        //$data['achievement'] = $achievement;
+
+        return $this->sendResponse($data, 'Departments retrieved successfully');
+    }
+
+}

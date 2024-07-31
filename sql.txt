@@ -1,0 +1,27 @@
+CREATE TABLE `department_wekend`
+ ( `id` INT NOT NULL AUTO_INCREMENT, `dep_id` INT, `date` DATE, PRIMARY KEY (`id`) ); 
+ ALTER TABLE `department_wekend` ADD COLUMN `updated_at` TIMESTAMP NULL AFTER `date`, 
+ ADD COLUMN `created_at` TIMESTAMP NULL AFTER `updated_at`;
+
+ CREATE TABLE `weekendgroup` ( `id` INT NOT NULL AUTO_INCREMENT, `name` VARCHAR(150)
+ , PRIMARY KEY (`id`) ); 
+
+ALTER TABLE weekendgroup ADD COLUMN `updated_at` TIMESTAMP NULL AFTER `name`, 
+ADD COLUMN `created_at` TIMESTAMP NULL AFTER `updated_at`;
+
+
+CREATE TABLE `weekendg_assign` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) DEFAULT NULL,
+  `department_id` int(11) DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+ALTER TABLE `department_wekend` CHANGE `dep_id` `group_id` INT(11) NULL; 

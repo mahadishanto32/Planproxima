@@ -1,0 +1,607 @@
+<template>
+<div>
+    <div class="app-content content">
+        <div class="content-wrapper">
+            <div class="content-header row">
+                <div class="content-header-left col-12 mb-1 mt-0">
+                    <div class="row breadcrumbs-top">
+                        <div class="col-sm-9">
+                            <div class="breadcrumb-wrapper col-9">
+                                <ol class="breadcrumb p-0 mb-0">
+                                    <li class="breadcrumb-item">
+                                        <router-link :to="{ path: '/' }"><i class="bx bx-home-alt"></i></router-link>
+                                    </li>
+                                    <li class="breadcrumb-item active"> Monthly Report 
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div v-if="monthly_button" class=" col-sm-3">
+                            <router-link class="btn btn-primary add-btn" :to="{ path: '/add_monthly_report' }"> <i class="bx bx-add-alt"></i>Monthly Report entry </router-link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content-body">
+           
+                <section id="basic-datatable">
+                    <div  class="users-list-filter px-1"> 
+                        <div class="row border rounded py-2 mb-2">
+                           <div  class="col-12 col-sm-6 col-lg-2">
+                              <label for="users-list-verified">Department</label>
+                              <fieldset class="form-group">
+                                 <select class="form-control"   v-on:change="getItems()"  v-model="filterForm.dept_id"  id="users-list-verified" >
+                                     <option value="">Select One</option>
+                                     <option v-for="row in deptItems" :key="row.id" :value="row.id" >
+                                     {{ row.name }}
+                                     </option>
+                                 </select>
+                                
+                              </fieldset>
+                           </div>
+                           <div  class="col-12 col-sm-6 col-lg-2">
+                            <label for="users-list-verified">Month</label>
+                            <fieldset class="form-group">
+                               <select class="form-control"  v-on:change="getItems()"  v-model="filterForm.month"  id="users-list-verified" > 
+                                   <option value="">Select month</option>
+                                   <option value="1">Jan</option>
+                                   <option value="2">Feb</option>
+                                   <option value="3">Mar</option>
+                                   <option value="4">Apr</option>
+                                   <option value="5">May</option>
+                                   <option value="6">Jun</option>
+                                   <option value="7">Jul</option>
+                                   <option value="8">Aug</option>
+                                   <option value="9">Sep</option>
+                                   <option value="10">Oct</option>
+                                   <option value="11">Nov</option>
+                                   <option value="12">Dec</option>
+                                   
+                               </select>
+                              
+                            </fieldset>
+                         </div>
+                          
+                        </div> 
+                       
+                    </div>
+                  
+                    <div class="row">
+                        <div class="col-12"> 
+                            <div class="card"> 
+                                <div class="card-content">
+                                    <div class="card-body card-dashboard">  
+                                        <nav>
+                                            <div class="nav nav-tabs" id="nav-tab" role="tablist"> 
+                                              <a
+                                                v-for="(row, index) in tabs"
+                                                :key="index"
+                                                class="nav-item nav-link"
+                                                @click="tabsSet(row.id , index )"
+                                                id="nav-home-tab"
+                                                data-toggle="tab"
+                                                href="#nav-home"
+                                                role="tab"
+                                                v-bind:class="{ active: index == 0 }" 
+                                                aria-controls="nav-home"
+                                                aria-selected="true"
+                                                >{{ row.name }}</a> 
+                                                <a 
+                                                v-if="(items.length > 0 && role_id == 5) || (user_data.dept_id !='')"
+                                                class="nav-item nav-link" 
+                                                id="nav-home-tab"
+                                                data-toggle="tab"
+                                                href="#nav-home"
+                                                role="tab"
+                                             
+                                                aria-controls="nav-home"
+                                                aria-selected="true"
+                                                @click="alertMail()"
+                                                ><i class="bx bx-mail-send"></i></a> 
+                                                <a 
+                                                v-if="items.length > 0"
+                                                class="nav-item nav-link" 
+                                                id="nav-home-tab"
+                                                data-toggle="tab"
+                                                href="#nav-home"
+                                                role="tab"
+                                                @click="singenPage()"
+                                                aria-controls="nav-home"
+                                                aria-selected="true"
+                                                ><i class="bx bxs-camera"></i></a> 
+                                                <!-- <a 
+                                                v-if="items.length > 0"
+                                                class="nav-item nav-link" 
+                                               
+                                                id="nav-home-tab"
+                                                data-toggle="tab"
+                                                href="#nav-home"
+                                                role="tab"
+                                                @click="singenPage2()"
+                                                aria-controls="nav-home"
+                                                aria-selected="true"
+                                                ><i class="bx bxs-camera"></i></a>  -->
+                                            </div>
+                                          </nav>
+                                        <div class="card">  
+                                            <div  class="card-content "> 
+                                                        <div class="card-body card-dashboard">
+
+                                                            <div class="table-responsive">
+                                                                <table class="table table-bordered table-sm"> 
+                                                                    <thead class="thead-dark">
+                                                                        <tr>
+                                                                            <th class="text-center" colspan="2"> {{ tabs[type_select].name}}</th> 
+                                                                        </tr>
+                                                                    </thead>   
+                                                                    <tbody  v-for="(item, index) in items" :key="index"> 
+                                                                        <template v-if="item.worktype === tabs[type_select].id"  >
+                                                                            <tr>
+                                                                                <td><strong>KRA Name</strong> </td> 
+                                                                                <td><strong>KPI Name</strong> </td> 
+                                                                                
+                                                                            </tr>
+                                                                            <tr> 
+                                                                                <td>{{ item.krajoin ? item.krajoin.kra_name :  item.custom_kra }} </td>  
+                                                                                <td>{{ item.kpijoin ? item.kpijoin.kpi_name : '' }}</td> 
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th colspan="2" class="text-center" v-if="tabs[type_select].id =='work_with_plan' ||  tabs[type_select].id =='without_plan' || tabs[type_select].id =='undone'" >Details  
+                                                                                    <!-- <a class="btn btn-primary add-btn" @click="delete_row(item.id)" > <i class="bx bx-add-alt"></i>Delete  </a>  -->
+                                                                                    <a class="btn btn-primary add-btn" @click="show_pop(item)" > <i class="bx bx-add-alt"></i>Comment  </a>  
+                                                                                </th> 
+                                                                            </tr>
+                                                                            <tr  v-if="tabs[type_select].id =='work_with_plan' ||  tabs[type_select].id =='without_plan' || tabs[type_select].id =='undone'" >
+                                                                                <td colspan="2" class="text-left" >
+                                                                                     <p v-html="item.monthly_work"></p> 
+                                                                                </td> 
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <th colspan="2" class="text-center" v-if="tabs[type_select].id =='others'" >Top Priority for {{monthNames[item.month   ]}}  month
+                                                                                    <!-- <a class="btn btn-primary add-btn" @click="delete_row(item.id)" > <i class="bx bx-add-alt"></i>Delete  </a>  -->
+                                                                                    <a class="btn btn-primary add-btn" @click="show_pop()" > <i class="bx bx-add-alt"></i>Comment  </a>  
+                                                                                </th> 
+                                                                            </tr>
+                                                                            <tr  v-if="tabs[type_select].id =='others'" >
+                                                                                <td colspan="2" class="text-left" >
+                                                                                     <p v-html="item.topforcurrentmonth"></p> 
+                                                                                </td> 
+                                                                            </tr>
+
+                                                                            <tr>
+                                                                                <th colspan="2" class="text-center" v-if="tabs[type_select].id =='others'" >Man Power Efficiency:</th> 
+                                                                            </tr>
+                                                                            <tr  v-if="tabs[type_select].id =='others'" >
+                                                                                <td colspan="2" class="text-left" >
+                                                                                     <p v-html="item.man_power_efficiency"></p> 
+                                                                                </td> 
+                                                                            </tr>
+                                                                            <tr  >
+                                                                                <td colspan="2" class="text-left" >
+                                                                                    <ul class="list-group" v-if="item.files.length > 0" >
+                                                                                        <li class="list-group-item disabled">Files</li>
+                                                                                        <li v-for="file in item.files" :key="file.id" class="list-group-item" >
+                                                                                            <img v-if="file.file_type =='pdf'" width="30px" :src=" base_url + 'assets/app-assets/images/pages/pdf.png'"  /> 
+                                                                                            <img v-if="file.file_type =='docx'" width="30px" :src="base_url + 'assets/app-assets/images/pages/docs.png'"  /> 
+                                                                                            <img v-if="file.file_type =='png'" width="30px" :src="base_url + 'assets/app-assets/images/pages/png.png'"  /> 
+                                                                                            <img v-if="file.file_type =='jpeg'" width="30px" :src="base_url + 'assets/app-assets/images/pages/jpeg.png'"  /> 
+                                                                                            <img v-if="file.file_type =='jpg'" width="30px" :src="base_url + 'assets/app-assets/images/pages/jpg.png'"  /> 
+                                                                                            <img v-if="file.file_type =='xlsx'" width="30px" :src="base_url + 'assets/app-assets/images/pages/Google sheets.png'"  />  
+                                                                                             <i @click="fileDownload(file.id)"> {{file.file_caption}}</i> <a class=""></a>
+                                                                                        </li> 
+                                                                                    </ul>
+                                                                                     
+                                                                                     
+                                                                                </td> 
+                                                                            </tr>
+                                                                        </template> 
+                                                                    </tbody>
+                                                                  
+                                                              </table> 
+                                                              <ul class="list-group" v-if="file_List.length > 0" >
+                                                                <li class="list-group-item disabled">Files</li>
+                                                                <li v-for="(item , index ) in file_List" :key="index" class="list-group-item" >
+                                                                  
+                                                                </li>
+                                                                 
+                                                              </ul>
+
+                                                        </div> 
+                                                    </div>  
+                                            </div> 
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <modal width="75%" height="80%" style="padding:50px" name="popup-singel">
+                    <i @click="hide_pop()" class="bx bx-x-circle  x-circle"></i>
+                    <div class="app-content ">
+                       <div class="card"> 
+                          <table class="table table-bordered table-striped table-sm">
+                             <tbody>  
+                                <tr> 
+                                    <th colspan="4" class="text-center">
+                                        <vue-editor v-model="daliy_mailForm.comment" name="comment" placeholder="Comment...."  ></vue-editor> 
+                                    </th> 
+                                 </tr>
+                                <tr>
+                                    <th class="text-center">
+                                        <div class="form-group">
+                                            <label for="Profession">Mail CC1</label>
+                                            <div class="controls">
+                                                <input  v-model="daliy_mailForm.mailcc1" placeholder="example1@gmail.com"  class="form-control" type="text" />
+                                            </div>
+                                        </div>  
+                                    </th>
+                                     <th class="text-center">
+                                        <div class="form-group">
+                                            <label for="Profession">Mail CC3</label>
+                                            <div class="controls">
+                                                <input v-model="daliy_mailForm.mailcc2"  placeholder="example2@gmail.com"  class="form-control" type="text" />
+                                            </div>
+                                        </div>  
+                                     </th>
+                                     <th class="text-center">
+                                        <div class="form-group">
+                                            <label for="Profession">Mail CC3</label>
+                                            <div class="controls">
+                                                <input  v-model="daliy_mailForm.mailcc3"  placeholder="example3@gmail.com"  class="form-control" type="text" />
+                                            </div>
+                                        </div>  
+                                    </th>
+                                   <th class="text-center">
+                                      <button @click="comment()" class="btn btn-success">Send</button>
+                                   </th>
+                                </tr>
+                             </tbody>
+                          </table> 
+                       </div>
+                    </div>
+                 </modal>
+                <modal width="75%" height="80%" style="padding:50px" name="singel">
+                    <i @click="hide_pop_singel()" class="bx bx-x-circle  x-circle"></i>
+                    <div class="app-content ">
+                       <div class="card"> 
+                        <div  v-for="(item, index) in items" :key="index">
+                           <div v-if="item.worktype == 'single_page'"> 
+                                <p v-html="item.monthly_work"></p> 
+                           </div>
+                        </div>
+                       </div>
+                    </div>
+                 </modal>
+                <modal width="75%" height="80%" style="padding:50px" name="singel2">
+                    <i @click="hide_pop_singel2()" class="bx bx-x-circle  x-circle"></i>
+                    <div class="app-content ">
+                       <div class="card"> 
+                        <div  v-for="(item, index) in items" :key="index">
+                           <div v-if="item.worktype == 'single_page'"> 
+                                <p v-html="item.monthly_work"></p> 
+                           </div>
+                        </div>
+                       </div>
+                    </div>
+                 </modal>
+            </div>
+        </div>
+    </div>
+</div>
+</template>
+
+<script>
+import axios from "../../axios_instance";
+import { Form } from "vform"; 
+import { VueEditor } from "vue2-editor";  
+export default {
+    props: {},
+    components: {
+        VueEditor
+        // VueRecaptcha, facebookLogin
+    },
+    data() {
+        return {
+             monthNames : ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+                ] ,
+
+            base_url: window.base_url,
+            api_url: window.api_url,    
+            DepartmentsItems : [],
+            user_data: JSON.parse(this.$localStorage.get("user")),
+            token: this.$localStorage.get("d_token"), 
+            tabs : [],
+            report_type : "",
+            type_select : 0 ,
+            kraItem: [] ,  
+            file_List : [],
+            deptSingel : [],
+            status: '',
+            kpiItem: [] ,  
+            mosItem: [] ,
+            deptItems : [],
+            monthly_button :  false ,
+            items : [],
+            filterForm: new Form({ 
+                dept_id: "",   
+                month : "",
+                user_id : "", 
+            }),
+            mail_comment : [],
+            daliy_mailForm: new Form({ 
+                mailcc1: "",  
+                mailcc2: "",  
+                mailcc3: "", 
+                dept_id : "", 
+                report_id : "",
+                comment : "",
+                item : []
+            }),
+        };
+    },
+    created() { 
+        
+        const d = new Date();
+        this.current_month = d.getMonth();
+        this.role_id = this.user_data.role_id ; 
+        if(this.role_id ==  5 || this.user_data.dept_id !='' || this.user_data.dept_id  ){
+            this.getDepartment().then(({ data }) => { 
+                if(data.success){ 
+                    this.deptSingel =  data.data ; 
+                    this.monthly_button =  this.deptSingel.monthly_date_range.status ;
+                    console.log( this.deptSingel.monthly_date_range.status );
+                } 
+            });
+        }
+        this.getDept();
+        this.tabs = [
+          {'id' : 'work_with_plan' , 'name' : ' Work with plan' },
+          {'id' : 'without_plan' , 'name' : 'Without plan' },
+          {'id' : 'undone' , 'name' : 'Undone' },
+          {'id' : 'others' , 'name' : 'Others' },
+          //{'id' : 'single_page' , 'name' : 'Single Page' },
+          //{'id' : 'wing_report' , 'name' : 'Wing Report' } 
+        ]
+         this.getDepartment(); 
+    },
+    methods: {
+        hide_pop() { 
+            this.$modal.hide("popup-singel");
+        },
+        show_pop(item) { 
+            this.mail_comment =  item ;
+            console.log( this.mail_comment);
+            this.$modal.show("popup-singel");   
+        },
+        hide_pop_singel() {
+            this.$modal.hide("singel");
+        },
+        singenPage() { 
+            this.$modal.show("singel");   
+        },
+        hide_pop_singel2() {
+            this.$modal.hide("singel2");
+        },
+        singenPage2() { 
+            this.$modal.show("singel2");   
+        },
+        tabsSet(id, index){
+            this.report_type =  id ;
+            this.type_select = index ;
+        },
+        fileDownload(id) {
+            window.open(this.api_url + "monthly_report_download/" + id, "_blank");
+        },
+        open_file(id){
+            console.log(id);
+        },
+        async row_delete(id){
+                 await axios
+                    .delete(this.api_url + "monthly_reports/" + id, {
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: this.token ? `Bearer ${this.token}` : ""
+                        },
+                    })
+                    .then((res) => {
+                        console.log(res);
+                       
+                        if (res.data.success) {
+                          
+                            this.$toasted.show(res.data.message, {
+                                theme: "bubble",
+                                duration: 5000,
+                                position: "bottom-right",
+                            });
+                        }
+                        this.getItems();
+                        //loader.hide();
+                    });
+
+        },
+        async delete_row(id) {
+
+            this.$swal({
+                title: "Are you sure?",
+                text: "Are you sure you want to delete?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                })
+                .then((data) => {
+                if (data) { 
+                    this.row_delete(id); 
+                } else {
+                   // loader.hide(); 
+                    this.$swal("Your task status is not change!");
+                }
+                });
+
+
+
+            console.log(id);
+            let loader = this.$loading.show();
+            try {
+                await axios
+                    .delete(this.api_url + "daily_schedules/" + id, {
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: this.token ? `Bearer ${this.token}` : ""
+                        },
+                    })
+                    .then(({
+                        res
+                    }) => {
+                        if (res.data.success) {
+                            this.$toasted.show(res.data.message, {
+                                theme: "bubble",
+                                duration: 5000,
+                                position: "bottom-right",
+                            });
+                        }
+                        loader.hide();
+                    });
+            } catch (error) {
+                loader.hide();
+            }
+        },
+        comment(){ 
+                try {
+                    let loader = this.$loading.show();
+                    this.daliy_mailForm.item  =   this.mail_comment ; 
+                    this.daliy_mailForm.post(this.api_url + "monthly_report_comment", {
+                        headers: {
+                        "Content-Type": "application/json", 
+                        Authorization: this.token ? `Bearer ${this.token}` : ""
+                        },
+                    }).then((res) => { 
+                        if(res.data.success){
+                            this.$toasted.show(res.data.message, {
+                                theme: "bubble",
+                                duration: 5000,
+                                position: "bottom-right",
+                            });
+                        } 
+                        loader.hide();  
+                       // this.$router.push('/daily_work');
+                    },(error)=>{
+                    console.log(error);
+                    loader.hide(); 
+                    })
+                } catch (error) {
+                    // loader.hide(); 
+                    console.log(error);
+                }
+                },
+                async dept() {
+                this.getDepartments().then(({ data }) => {
+                    if (data.success) {
+                    this.DepartmentsItems = data.data;
+                    }
+                });
+        },
+        async getItems() {
+            if (this.filterForm.month && this.filterForm.dept_id) {
+            let where = '?'; 
+                
+                if (this.filterForm.dept_id) {
+                    where += '&dept_id=' + this.filterForm.dept_id;
+                } 
+                if (this.filterForm.month) {
+                    where += '&month=' + this.filterForm.month;
+                } 
+                let loader = this.$loading.show();
+                try {
+                    await axios
+                        .get(this.api_url + "monthly_reports" + where, {
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: this.token ? `Bearer ${this.token}` : ""
+                            },
+                        })
+                        .then(({
+                            data
+                        }) => {
+                            if (data.success) {
+                                this.items = data.data
+                            }
+                            loader.hide();
+                        });
+                } catch (error) {
+                    loader.hide();
+                }
+            }
+        },
+        alertMail(){
+            this.$swal({
+                title: "Are you sure?",
+                text: "Are you sure you want to send this email",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                })
+                .then((data) => {
+                if (data) { 
+                    this.monthly_report_mail(); 
+                } else {
+                   // loader.hide(); 
+                    this.$swal("Your mail not send!");
+                }
+                });
+
+        },
+        async monthly_report_mail() {
+            if (this.filterForm.month && this.filterForm.dept_id) {
+         
+                let loader = this.$loading.show();
+                try {
+                    await axios
+                        .get(this.api_url + "monthly_report_mail/" +this.filterForm.dept_id + '/'+ this.filterForm.month , {
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: this.token ? `Bearer ${this.token}` : ""
+                            },
+                        })
+                        .then(({
+                            data
+                        }) => { 
+                            this.$swal(data.message);
+                            loader.hide();
+                        });
+                } catch (error) {
+                    loader.hide();
+                }
+            }
+        },
+        
+        async getDept(){
+            let loader = this.$loading.show();
+            this.getDepartments( this.status ).then(({ data }) => { 
+                if(data.success){
+                    loader.hide();
+                    this.deptItems =  data.data ;
+                    this.getItems(); 
+                }else{
+                    loader.hide(); 
+                }
+            }); 
+       },
+
+        
+       
+    
+    },
+    computed: {},
+};
+</script>
+<style>
+    .btn.btn-primary.add-btn {
+    color: #fff;
+}
+tr {
+   border: darkgray;
+}
+</style>

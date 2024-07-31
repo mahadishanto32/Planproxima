@@ -1,0 +1,180 @@
+/*================================================================================
+	Item Name: Frest HTML Admin Template
+	Version: 1.0
+	Author: PIXINVENT
+	Author URL: http://www.themeforest.net/user/pixinvent
+================================================================================
+
+NOTE:
+------
+PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
+WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
+ .toasted.bubble{
+ 	background: #155724 ;
+ }
+ .pt-2, .py-2 {
+    padding-top: 7px !important;
+}
+.pb-2, .py-2 {
+    padding-bottom: 0 !important;
+}
+.add-btn{
+	float: right;
+}
+.router-link-exact-active.router-link-active {
+    background-color: #124AB63C; 
+    border-radius: 4px;
+}
+.router-link-exact-active.router-link-active i, .router-link-exact-active.router-link-active span { 
+	color: #5a8dee;
+}
+.navbar-header {
+    background-color: #ffffff;
+}
+.main-menu.menu-light .navigation {
+    background-color: #ffffff;
+}
+.navbar-container.content {
+    background-color: #ffffff;
+}
+.main-menu.menu-fixed.menu-light.menu-accordion.menu-shadow {
+    background-color: #fff;
+}
+table table td { 
+    padding: 6px !important;
+}
+/* tr:nth-child(even) {background-color: #f2f2f2;}
+tr:nth-child(odd) {background-color: #ffffff;} */
+.vm--modal {
+    padding: 50px;
+}
+.arrow-right {
+    color: orange ;
+    font-size: 18px;
+    font-weight: bold;
+    border: 3px solid;
+    border-radius: 16px;
+}
+.arrow-up {
+    color: red ;
+    font-size: 18px;
+    font-weight: bold;
+    border: 3px solid;
+    border-radius: 16px;
+}
+.arrow-down {
+    color: green ;
+    font-size: 18px;
+    font-weight: bold;
+    border: 3px solid;
+    border-radius: 16px;
+}
+.arrow-circleup{
+    color: orange ;
+    /* font-size: 18px; */
+    font-weight: bold;  
+    border: 3px solid;
+    border-radius: 16px;
+    height: 21px;
+    width: 21px;
+}
+.nav-item i {
+    padding: 0 8px 0 0;
+    font-weight: bold;
+    font-size: 18px;
+}
+.x-circle {
+    float: right;
+    top: -49px;
+    position: relative;
+    color: red;
+    font-size: 35px;
+    right: -49px;
+}
+.table{
+    color: #323539;
+}
+thead.grand_total th {
+    color: #fff !important;
+}
+thead.grand_total {
+    background: #2c6de9; 
+}
+
+
+.dropdown-notification{
+    padding: 0;
+}
+.dropdown-notification .form-group{
+    margin: 8px 0;
+}
+.header-navbar .navbar-container ul.nav li a.dropdown-user-link{
+    padding: 0.5rem 1.25rem 0.5rem 1rem;
+}
+.breadcrumbs-top .col-sm-1{
+    text-align: right;
+}
+.breadcrumbs-top a.btn{
+    padding: 0 10px;
+    color: #fff;
+}
+
+table tr th,
+table tr td{
+    position: relative;
+    padding: 2px;
+}
+table tr th.rtl::before,
+table tr td.rtl::before{
+    content:'';
+    background-image: url(rtl.png);
+    background-repeat-x: no-repeat;
+    position: absolute;
+    height: 100%;
+    width: 3px;
+    z-index: 1;
+    left: 0;
+    top: 0;
+}
+
+table tr th.ltr::after,
+table tr td.ltr::after{
+    content:'';
+    background-image: url(ltr.png);
+    background-position: right;
+    background-repeat-x: no-repeat;
+    position: absolute;
+    height: 100%;
+    width: 3px;
+    z-index: 1;
+    right: 0;
+    top: 0;
+}
+table thead tr th.rtl.ltr{
+    background-image: url(dot.png);
+    background-position: top right;
+    background-repeat-y: no-repeat;
+}
+table tfoot tr th.rtl.ltr{
+    background-image: url(dot.png);
+    background-position: bottom right;
+    background-repeat-y: no-repeat;
+}
+
+.btn-block.glow.users-list-clear.mb-0.download_template {
+    text-decoration: underline;
+    color: #5a8dee;
+}
+.selected_row {
+    background: #5a8dee;
+    color: #FFF;
+    margin: 0 0px 0 2px;
+    padding: 2px 5px 4px 5px;
+    border-radius: 5px;
+}
+.btn.btn-primary.add-btn {
+    padding: 5px;
+    font-size: 17px;
+    font-weight: bold;
+}
+ 

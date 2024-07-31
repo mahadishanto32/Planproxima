@@ -1,0 +1,13 @@
+.env
+composer.lock
+web/node_modules
+web/node_modules/*
+web/dist
+public/hot
+backend/public/storage
+backend/storage/*.key
+backend/vendor/
+backend/vendor/*
+
+
+*.zip

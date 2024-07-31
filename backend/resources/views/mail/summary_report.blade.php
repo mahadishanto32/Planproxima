@@ -1,0 +1,1 @@
+<!DOCTYPE html><html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office"><body style="margin:0;padding:10px"><b>Dear Concern,</b><br><div style="font-size: 18px;">{{$data['all_dept_comm']}}</div></body></html>

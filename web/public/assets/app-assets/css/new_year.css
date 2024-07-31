@@ -1,0 +1,42 @@
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:900&display=swap");
+.new_year_popup  {
+background-color: rgba(247, 247, 247, 0.79);
+margin: 0 auto;
+max-width: 100%;
+}
+.new_year_popup.vm--container {
+    z-index: 9999;
+}
+.new_year_popup .app-content {
+    overflow-y: hidden !important;   
+}
+.new_year_close {
+    color: red !important;
+    position: absolute  !important;
+    top: 10px  !important;
+    z-index: 9999999  !important;
+    right: 20px  !important;
+    background: #fff  !important;
+    border-radius: 20px  !important;
+}
+.vm--modal {
+    padding: 0 !important; 
+}
+.kontener {
+    /* margin: 100px auto; */
+    scale: .9;
+}
+
+.vm--modal {
+    position: absolute;
+    overflow: hidden;
+    box-sizing: border-box;
+    background-color: transparent  !important;
+    border-radius: 3px;
+    box-shadow: none !important;
+    margin: 0 auto;
+    text-align: center;
+    left: 50% !important;
+    margin-left: -25%;
+}
+.vm--overlay{height:100% !important}

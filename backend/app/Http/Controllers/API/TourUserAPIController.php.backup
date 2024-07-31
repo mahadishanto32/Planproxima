@@ -1,0 +1,296 @@
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Http\Requests\API\CreateTourUserAPIRequest;
+use App\Http\Requests\API\UpdateTourUserAPIRequest;
+use App\Models\TourUser;
+use App\Models\User;
+use App\Repositories\TourUserRepository;
+use App\Repositories\UserRepository;
+use Illuminate\Http\Request;
+use App\Http\Controllers\AppBaseController;
+use Response , DB , Auth;
+use Illuminate\Support\Facades\Hash;
+
+/**
+ * Class TourUserController
+ * @package App\Http\Controllers\API
+ */
+
+class TourUserAPIController extends AppBaseController
+{
+    /** @var  TourUserRepository */
+    private $tourUserRepository;
+    private $userRepository;
+
+    public function __construct(TourUserRepository $tourUserRepo, UserRepository $userRepo)
+    {
+        $this->tourUserRepository = $tourUserRepo;
+        $this->userRepository = $userRepo;
+    }
+
+    /**
+     * Display a listing of the TourUser.
+     * GET|HEAD /tourUsers
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function index(Request $request)
+    {
+        $tourUsers = $this->userRepository->all(
+            $request->except(['skip', 'limit']),
+            $request->get('skip'),
+            $request->get('limit')
+        );
+
+        return $this->sendResponse($tourUsers->toArray(), 'Tour Users retrieved successfully');
+    }
+
+    public function tour_users(Request $request)
+    {
+       
+        $users = DB::table('users')
+        ->where('iactive', 0)
+        ->where(function($query)
+        {
+            $query->where('tour_permission','=',1)
+            ->orWhere('designation','=','GM')
+            ->orWhere('designation','=','SM')
+            ->orWhere('designation','=','ADSM')
+            ->orWhere('designation','=','ASM');
+        })
+        ->orderBy('id')->get();
+    
+    
+        $rsm = DB::table('users')
+        ->where('tour_permission', 1)
+        ->where('designation', 'RSM')
+        ->orderBy('id')->get();
+    
+        $adsm = DB::table('users')
+        ->where('tour_permission', 1)
+        ->where('designation', 'ADSM')
+        ->orderBy('id')->get();
+    
+        $dsm = DB::table('users')
+        ->where('tour_permission', 1)
+        ->where('designation', 'DSM')
+        ->orderBy('id')->get();
+    
+        $asm = DB::table('users')
+        ->where('tour_permission', 1)
+        ->where('designation', 'ASM')
+        ->orderBy('id')->get();
+    
+        $sm = DB::table('users')
+        ->where('tour_permission','=',1)
+        ->where(function($query)
+        {
+            $query->where('designation','=','SM')
+            ->orWhere('designation','=','AGM');
+        })
+        ->orderBy('id')->get();
+    
+        $divisional_head = DB::table('users')
+        ->where('tour_permission', 1)
+        ->where('designation', 'DIVISONAL_HEAD')
+        ->orderBy('id')->get();
+    
+        // $hos = DB::table('users')
+        // ->where('tour_permission', 1)
+        // ->where('head_of_sales', 1)
+        // ->orderBy('id')->get();
+        $hos = DB::table('users')
+        ->where('tour_permission', 1)
+        ->where('designation', 'GM')
+        ->orderBy('id')->get();
+
+        $return_data = array(
+            'users' => $users ,
+            'rsm' => $rsm ,
+            'adsm' => $adsm ,
+            'dsm' => $dsm ,
+            'asm' => $asm ,
+            'sm' => $sm ,
+            'divisional_head' => $divisional_head ,
+            'hos' => $hos  
+          );
+    
+
+        return $this->sendResponse($return_data, 'Tour Users retrieved successfully');
+    }
+    public function supervisor(Request $request)
+    {
+       
+        $user_data = Auth::user();
+
+
+        $supervisor = DB::table('users')
+        ->where('iactive',0);
+    
+        if($user_data->designation=='SM' || $user_data->designation=='AGM'){
+    
+            $supervisorResult = $supervisor->where('sm',$user_data->id)->orderBy('id')->get();
+        }
+        elseif($user_data->designation=='ASM'){
+    
+            $supervisorResult = $supervisor->where('asm',$user_data->id)->orderBy('id')->get();
+        }
+        elseif($user_data->designation=='DSM'){
+    
+            $supervisorResult = $supervisor->where('dsm',$user_data->id)->orderBy('id')->get();
+        } 
+        elseif($user_data->designation=='ADSM'){
+    
+            $supervisorResult = $supervisor->where('adsm',$user_data->id)->orderBy('id')->get();
+        }
+        elseif($user_data->designation=='RSM'){
+    
+            $supervisorResult = $supervisor->where('rsm',$user_data->id)->orderBy('id')->get();
+        }
+    
+        else{
+            if($user_data->usertype=='A')
+            {
+                if($user_data->email=='hrashid'){
+                    $supervisorResult = $supervisor->where('dmd_tour','=', 1)
+                    ->orderBy('name')->get();
+                }else{
+                    $supervisorResult = $supervisor->where(function($query)
+                    {
+                        $query->where('email','>',30)
+                        ->orWhere('email','=','sysadmin')
+                        ->orWhere('email','=','ibrahim')
+                        ->orWhere('email','=','sales');
+                    })
+                    ->where('tour_program','=', 1)
+                    ->orderBy('name')->get();
+    
+                }
+            }
+            elseif($user_data->usertype=='D')
+            {
+                $supervisorResult = $supervisor->where('tour_program','=', 1)
+                    ->orderBy('name')->get();
+            } 
+            elseif($user_data->dept>0)
+            {
+                $supervisorResult = $supervisor->where('rsm',$user_data->dept)->orderBy('id')->get();
+            }  
+            else{
+    
+                $supervisorResult = $supervisor->where('email',$user_data->email)->orderBy('id')->get();
+            }
+    
+    
+        }
+
+        return $this->sendResponse($supervisorResult, 'Tour Users retrieved successfully');
+    }
+
+    /**
+     * Store a newly created TourUser in storage.
+     * POST /tourUsers
+     *
+     * @param CreateTourUserAPIRequest $request
+     *
+     * @return Response
+     */
+    public function store(CreateTourUserAPIRequest $request)
+    {
+
+
+        try {
+            DB::beginTransaction();
+            $input = $request->all();
+
+           // $tourUser = $this->tourUserRepository->create($input);
+
+            // $data['email'] = $request->email;
+            // $data['password'] = Hash::make($request->password);
+            // $data['dept_id'] = 1;
+
+            $input['iactive'] = 0 ;
+
+            $this->userRepository->create($input);
+            
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return $this->sendError('Something went wrong');
+        }
+
+        return $this->sendResponse($tourUser->toArray(), 'Tour User saved successfully');
+    }
+
+    /**
+     * Display the specified TourUser.
+     * GET|HEAD /tourUsers/{id}
+     *
+     * @param int $id
+     *
+     * @return Response
+     */
+    public function show($id)
+    {
+        /** @var TourUser $tourUser */
+        $tourUser = $this->tourUserRepository->find($id);
+
+        if (empty($tourUser)) {
+            return $this->sendError('Tour User not found');
+        }
+
+        return $this->sendResponse($tourUser->toArray(), 'Tour User retrieved successfully');
+    }
+
+    /**
+     * Update the specified TourUser in storage.
+     * PUT/PATCH /tourUsers/{id}
+     *
+     * @param int $id
+     * @param UpdateTourUserAPIRequest $request
+     *
+     * @return Response
+     */
+    public function update($id, UpdateTourUserAPIRequest $request)
+    {
+        $input = $request->all();
+
+        /** @var TourUser $tourUser */
+        $tourUser = $this->tourUserRepository->find($id);
+
+        if (empty($tourUser)) {
+            return $this->sendError('Tour User not found');
+        }
+
+        $tourUser = $this->tourUserRepository->update($input, $id);
+
+        return $this->sendResponse($tourUser->toArray(), 'TourUser updated successfully');
+    }
+
+    /**
+     * Remove the specified TourUser from storage.
+     * DELETE /tourUsers/{id}
+     *
+     * @param int $id
+     *
+     * @throws \Exception
+     *
+     * @return Response
+     */
+    public function destroy($id)
+    {
+        /** @var TourUser $tourUser */
+        $tourUser = $this->tourUserRepository->find($id);
+
+        if (empty($tourUser)) {
+            return $this->sendError('Tour User not found');
+        }
+
+        $tourUser->delete();
+
+        return $this->sendSuccess('Tour User deleted successfully');
+    }
+}
