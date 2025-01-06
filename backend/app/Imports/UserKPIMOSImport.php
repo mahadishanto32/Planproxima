@@ -38,7 +38,7 @@ class UserKPIMOSImport implements ToModel, WithHeadingRow
 
             //Note: New Employee From HRIS API 
             if (!$employee) {
-                $url = "http://magpie.hris.ssgbd.com/api/EmployeeInfoBPT?empCode=" . $row['employee_id'];
+                $url = "" . $row['employee_id'];
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $url);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

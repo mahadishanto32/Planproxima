@@ -13,7 +13,7 @@
     "@ckeditor/ckeditor5-link": "^29.2.0",
     "@ckeditor/ckeditor5-vue": "^2.0.1",
     "@ckeditor/ckeditor5-vue2": "^1.0.5",
-    "@ssthouse/vue-tree-chart": "^0.5.4",
+    "@ssthouse/vue-tree-chart": "^0.6.8",
     "@syncfusion/ej2-vue-richtexteditor": "^19.4.40",
     "@tiptap/starter-kit": "^2.0.0-beta.190",
     "@tiptap/vue-2": "^2.0.0-beta.84",
@@ -24,7 +24,7 @@
     "chart.js": "^2.9.4",
     "core-js": "^3.23.3",
     "eslint-loader": "^2.1.2",
-    "katex": "^0.13.24",
+    "katex": "^0.16.10",
     "mdbvue": "^6.7.3",
     "mermaid": "^8.13.8",
     "ng2-charts": "^2.4.3",
@@ -72,8 +72,10 @@
     "vue2-quill-editor": "^2.0.26",
     "vue2-timepicker": "^1.1.6",
     "vueditor": "^0.3.1",
+    "vuedraggable": "^2.24.3",
     "vuejs-datepicker": "^1.6.2",
-    "vuejs-quill": "^1.4.0"
+    "vuejs-quill": "^1.4.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@ckeditor/ckeditor5-alignment": "^29.2.0",

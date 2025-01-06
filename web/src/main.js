@@ -62,22 +62,24 @@ if (window.location.origin == 'http://localhost:8080') {
   window.base_url = 'https://planproxima.humanx.ltd/'
   window.api_url = 'https://planproxima.humanx.ltd/backend/public/api/'
   window.backend_url = 'https://planproxima.humanx.ltd/backend/public/'
-} else {
+}else if (window.location.origin == 'http://192.168.0.182') {
+  window.base_url = 'http://192.168.0.182/'
+  window.api_url = 'http://192.168.0.182/backend/public/api/'
+  window.backend_url = 'http://192.168.0.182/backend/public/'
+}
+ else {
   window.base_url = 'http://localhost:8080/'
   window.api_url = 'http://127.0.0.1:8000/api/'
   window.backend_url = 'http://localhost/svn_bpt/backend/'
 }
-// window.base_url = 'http://localhost:8080/';
-// window.api_url = 'http://127.0.0.1:8000/api/';
-// window.backend_url = 'http://localhost/svn_bpt/backend/';
+//  window.base_url = 'http://192.168.0.211/backend/public/';
+//  window.api_url = 'http://192.168.0.211/backend/public/api/';
+//  window.backend_url = 'http://192.168.0.211/backend/public/backend/';
 
 // window.base_url = 'https://planproxima.humanx.ltd/';
 // window.api_url = 'https://planproxima.humanx.ltd/backend/public/api/';
 // window.backend_url = 'https://planproxima.humanx.ltd/backend/public/';
 
-window.base_url = 'https://planproxima.humanx.ltd/'
-window.api_url = 'https://planproxima.humanx.ltd/backend/public/api/'
-window.backend_url = 'https://planproxima.humanx.ltd/backend/public/'
 
 // moment.tz.setDefault('Asia/Dhaka');
 Vue.use(VueSwal)

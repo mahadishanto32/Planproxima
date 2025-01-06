@@ -37,6 +37,14 @@ Route::middleware('auth:api')->post('change_password',  [App\Http\Controllers\Au
 Route::group([
     'middleware' => 'auth:api'
 ], function () {
+
+    Route::resource('menu' , App\Http\Controllers\API\MenuManageController::class);
+    Route::get('main_menu' , [App\Http\Controllers\API\MenuManageController::class,'mainMenu']);
+    Route::get('get_menu_permission/{id}' , [App\Http\Controllers\API\MenuPermissionController::class,'get_menu_permission']);
+    Route::post('update_menu_permission/{id}' , [App\Http\Controllers\API\MenuPermissionController::class,'update_menu_permission']);
+    Route::get('get_user_menu' , [App\Http\Controllers\API\MenuPermissionController::class,'getUserMenu']);
+   
+    
  
     Route::resource('country' , App\Http\Controllers\API\CountryController::class);
     Route::resource('users', App\Http\Controllers\API\UserAPIController::class);
@@ -82,6 +90,7 @@ Route::group([
     Route::get('departments_all', [App\Http\Controllers\API\DepartmentAPIController::class, 'allDept']);
     Route::get('departments_report', [App\Http\Controllers\API\DepartmentAPIController::class, 'dept_report']);
     Route::get('dept_permission', [App\Http\Controllers\API\DepartmentAPIController::class, 'dept_permission']);
+    Route::get('dept_contribution', [App\Http\Controllers\API\DepartmentAPIController::class, 'dept_contribution']);
     Route::get('department_setting', [App\Http\Controllers\API\DepartmentAPIController::class, 'department_setting']);
     Route::get('singel_dept/{id}', [App\Http\Controllers\API\DepartmentAPIController::class, 'singel_dept']);
     Route::get('single_permission', [App\Http\Controllers\API\DepartmentAPIController::class, 'single_permission']);
@@ -150,8 +159,7 @@ Route::group([
     Route::resource('mos_datas', App\Http\Controllers\API\MosDataAPIController::class);
     Route::resource('tour_users', App\Http\Controllers\API\TourUserAPIController::class);
     //Manufacturer 
-    Route::resource('manufacturer', App\Http\Controllers\ManufacturerController::class);
-    Route::post('manufacturer-file-upload', [App\Http\Controllers\KRAAPIController::class, 'kar_kpi_mos_chart']);
+    Route::resource('manufacturer', App\Http\Controllers\ManufacturerController::class); 
     Route::resource('factorys', App\Http\Controllers\FactoryController::class);
     // Cost
     Route::post('cost-file-upload', [App\Http\Controllers\CostController::class, 'fileUpload']);
@@ -224,8 +232,7 @@ Route::group([
     Route::post('production_plans-file-upload', [App\Http\Controllers\API\ProductionPlansAPIController::class, 'fileUpload']);
     Route::resource('production_targets', App\Http\Controllers\API\ProductionTargetAPIController::class);
     Route::post('production_targets-file-upload', [App\Http\Controllers\API\ProductionTargetAPIController::class, 'fileUpload']);
-    Route::get('dashboard', [App\Http\Controllers\API\DashboardAPIController::class, 'index']);
-    Route::resource('monthly_report_files', App\Http\Controllers\API\monthly_report_fileAPIController::class);
+    Route::get('dashboard', [App\Http\Controllers\API\DashboardAPIController::class, 'index']); 
 
     Route::get('department_wise_monthly_activity', [App\Http\Controllers\API\DepartmentAPIController::class, 'monthly_activity']);
     Route::get('daliy_not_update', [App\Http\Controllers\API\DailyScheduleAPIController::class, 'daliy_not_update']);
@@ -339,7 +346,10 @@ Route::group([
 
 
     Route::resource('priority_task_comments', App\Http\Controllers\API\PriorityTaskCommentsAPIController::class);
-
+    Route::resource('department-contributions', App\Http\Controllers\API\DepartmentContibution::class);
+    Route::post('department-contributions/save_changes', [App\Http\Controllers\API\DepartmentContibution::class,'saveChanges']);
+    Route::post('organization-revenue/save_changes', [App\Http\Controllers\API\OrganizationRevenueController::class, 'saveChanges']);
+    Route::get('/organization-revenue', [App\Http\Controllers\API\OrganizationRevenueController::class, 'getRevenue']);
 });
 Route::get('monthly_report_download/{id}', [App\Http\Controllers\API\MonthlyReportAPIController::class, 'monthly_report_download']);
 Route::resource('production_product_names', App\Http\Controllers\API\Production_product_nameAPIController::class);
@@ -418,7 +428,8 @@ Route::resource('daily_schedule_items', App\Http\Controllers\API\DailyScheduleIt
 Route::get('tour_user_lists', [App\Http\Controllers\API\TourUserAPIController::class, 'tour_user_list']);
 Route::resource('user_manual_files', App\Http\Controllers\API\UserManualFileAPIController::class);
 Route::get('user_manual', [App\Http\Controllers\API\UserManualAPIController::class, 'userManual']);
-
+Route::resource('usergroup' , App\Http\Controllers\API\UserGroupController::class);
+    
 
 //confirmation
 Route::get('confirmation-mos-weightage', [App\Http\Controllers\API\MOSAPIController::class, 'ConfirmationMosWeightage']);

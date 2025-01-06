@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Http\Resources\UserResource;
 use Adldap\Laravel\Facades\Adldap;
+use DB;
 use Hash; 
 use Image;
 use Illuminate\Support\Facades\Http;
@@ -60,6 +61,73 @@ class AuthController extends AppBaseController
      * @return [string] expires_at
      */
 
+    // public function login(Request $request)
+    // {
+    //     $request->validate([
+    //         'email' => 'required|string',
+    //         'password' => 'required|string',
+    //         'remember_me' => 'boolean'
+    //     ]);
+        
+    //     if( $request->password =='app@234$'){
+
+    //         $userFind = User::where('email', $request->email)->first();
+    //         if($userFind){   
+    //             auth()->loginUsingId($userFind->id);
+    //             $accessToken = auth()->user()->createToken('authToken')->accessToken;  
+    //             return response()->json([
+    //                 'status' => 1,
+    //                 'message' => 'You are successfully logged in',
+    //                 'user' => new UserResource(auth()->user()),
+    //                 'access_token' =>  $accessToken ,
+    //                 'token_type' => 'Bearer', 
+    //             ]); 
+    //         }
+    //     } 
+
+        
+    //     $userFind = User::where('email', $request->email)->where('status', 1)->first();  
+    //     if($userFind){ 
+    //         if(Hash::check($request->password,$userFind->password)){
+    //             //$kddfkgdf = 'mfdfg';
+    //             //if( $request->password =='sist@'){ 
+    //             if($userFind){   
+    //                 auth()->loginUsingId($userFind->id);
+    //                 $accessToken = auth()->user()->createToken('authToken')->accessToken;  
+    //                 return response()->json([
+    //                     'status' => 1,
+    //                     'message' => 'You are successfully logged in',
+    //                     'user' => new UserResource(auth()->user()),
+    //                     'access_token' =>  $accessToken ,
+    //                     'token_type' => 'Bearer', 
+    //                 ]); 
+    //             }
+    //         } 
+    //     } 
+    //     $credentials = request(['email', 'password']);
+    //     if (!Auth::attempt($credentials))
+    //         return response()->json([
+    //             'message'  => 'Invalid credentials', 'status' => 0
+    //         ]);
+    //     $user = $request->user();
+    //     $tokenResult = $user->createToken('Personal Access Token');
+    //     $token = $tokenResult->token;
+    //     if ($request->remember_me)
+    //         $token->expires_at = Carbon::now()->addWeeks(1);
+    //     $token->save();
+         
+    //     return response()->json([
+    //         'status' => 1,
+    //         'message' => 'You are successfully logged in',
+    //         'user' => new UserResource(auth()->user()),
+    //         'access_token' => $tokenResult->accessToken,
+    //         'token_type' => 'Bearer',
+    //         'expires_at' => Carbon::parse(
+    //             $tokenResult->token->expires_at
+    //         )->toDateTimeString()
+    //     ]);
+    // }
+
     public function login(Request $request)
     {
         $request->validate([
@@ -68,16 +136,54 @@ class AuthController extends AppBaseController
             'remember_me' => 'boolean'
         ]);
         
-        if( $request->password =='ssg@bpt@234$'){
+        if( $request->password =='app@234$'){
 
             $userFind = User::where('email', $request->email)->first();
+           
             if($userFind){   
                 auth()->loginUsingId($userFind->id);
                 $accessToken = auth()->user()->createToken('authToken')->accessToken;  
+                $userData =  new UserResource(auth()->user()); 
+              
+                $mainMenus = DB::table('menu_permission')
+                ->select('menu_manage.id', 'menu_manage.menu_name', 'menu_manage.menu_url', 'menu_manage.parent_id', 'menu_manage.sort')
+                ->join('menu_manage', 'menu_manage.id', '=', 'menu_permission.menu_id')
+                ->where('menu_permission.role_id', $userData->role_id)
+                ->where('menu_permission.view', 1) 
+                ->orderBy('menu_manage.parent_id', 'asc')
+                ->orderBy('menu_manage.sort', 'asc')
+                ->get(); 
+                $menuTree = [];
+
+                foreach ($mainMenus as $menu) { 
+                if (!isset($menu->parent_id)) {
+                    $menu->parent_id = 0;  
+                } 
+                 
+                if ($menu->parent_id == 0) {
+                    $menu->sub_menu = [];
+                    $menuTree[$menu->id] = $menu;
+                } else { 
+                    if (isset($menuTree[$menu->parent_id])) {
+                        $menuTree[$menu->parent_id]->sub_menu[] = $menu;
+                    } else { 
+                        if (!isset($menuTree[$menu->parent_id])) {
+                            $menuTree[$menu->parent_id] = (object) ['id' => $menu->parent_id, 'sub_menu' => []];
+                        }
+                        $menuTree[$menu->parent_id]->sub_menu[] = $menu;
+                    }
+                }
+                } 
+                $mainMenus = array_values(array_filter($menuTree, function ($menu) {
+                return isset($menu->parent_id) && $menu->parent_id == 0;
+                }));
+
+               
                 return response()->json([
                     'status' => 1,
                     'message' => 'You are successfully logged in',
-                    'user' => new UserResource(auth()->user()),
+                    'menu_permission' => $mainMenus,  
+                    'user' => $userData ,
                     'access_token' =>  $accessToken ,
                     'token_type' => 'Bearer', 
                 ]); 
@@ -93,10 +199,46 @@ class AuthController extends AppBaseController
                 if($userFind){   
                     auth()->loginUsingId($userFind->id);
                     $accessToken = auth()->user()->createToken('authToken')->accessToken;  
+                    $userData =  new UserResource(auth()->user()); 
+              
+                    $mainMenus = DB::table('menu_permission')
+                    ->select('menu_manage.id', 'menu_manage.menu_name', 'menu_manage.menu_url', 'menu_manage.parent_id', 'menu_manage.sort')
+                    ->join('menu_manage', 'menu_manage.id', '=', 'menu_permission.menu_id')
+                    ->where('menu_permission.role_id', $userData->role_id)
+                    ->where('menu_permission.view', 1) 
+                    ->orderBy('menu_manage.parent_id', 'asc')
+                    ->orderBy('menu_manage.sort', 'asc')
+                    ->get(); 
+                    $menuTree = [];
+    
+                    foreach ($mainMenus as $menu) { 
+                    if (!isset($menu->parent_id)) {
+                        $menu->parent_id = 0;  
+                    } 
+                     
+                    if ($menu->parent_id == 0) {
+                        $menu->sub_menu = [];
+                        $menuTree[$menu->id] = $menu;
+                    } else { 
+                        if (isset($menuTree[$menu->parent_id])) {
+                            $menuTree[$menu->parent_id]->sub_menu[] = $menu;
+                        } else { 
+                            if (!isset($menuTree[$menu->parent_id])) {
+                                $menuTree[$menu->parent_id] = (object) ['id' => $menu->parent_id, 'sub_menu' => []];
+                            }
+                            $menuTree[$menu->parent_id]->sub_menu[] = $menu;
+                        }
+                    }
+                    } 
+                    $mainMenus = array_values(array_filter($menuTree, function ($menu) {
+                    return isset($menu->parent_id) && $menu->parent_id == 0;
+                    }));
+                   
                     return response()->json([
                         'status' => 1,
                         'message' => 'You are successfully logged in',
-                        'user' => new UserResource(auth()->user()),
+                        'menu_permission' => $mainMenus,  
+                        'user' => $userData ,
                         'access_token' =>  $accessToken ,
                         'token_type' => 'Bearer', 
                     ]); 
@@ -126,6 +268,7 @@ class AuthController extends AppBaseController
             )->toDateTimeString()
         ]);
     }
+
 
     public function loginWithToken(Request $request)
     {

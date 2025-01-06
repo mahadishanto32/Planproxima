@@ -53,7 +53,7 @@
 
                 <div
                   class="ccol-sm-6 col-lg-2"
-                  v-if="role_id == 5 || role_id == 6"
+                  v-if="role_id == 1 || role_id == 5 || role_id == 6"
                 >
                   <label for="users-list-verified">Wings</label>
                   <fieldset class="form-group">
@@ -76,7 +76,7 @@
                 </div>
                 <div
                   class="col-sm-6 col-lg-2"
-                  v-if="role_id == 5 || role_id == 6"
+                  v-if="role_id == 1 || role_id == 5 || role_id == 6"
                 >
                   <label for="users-list-verified">Employee</label>
                   <fieldset class="form-group">

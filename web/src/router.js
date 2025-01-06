@@ -20,6 +20,7 @@ import dept_permission from "./dashboard/department/dept_permission.vue";
 import kra_kpi_permission from "./dashboard/department/kra_kpi_permission.vue";
 
 import department_setting from "./dashboard/department/setting.vue";
+import dept_contribution from "./dashboard/department/dept_contribution.vue";
 import m_o_s_achievement_permissions from "./dashboard/kar_kpi/m_o_s_achievement_permissions.vue";
 //m_o_s_dept_setting
 import m_o_s_dept_setting from "./dashboard/kar_kpi/m_o_s_dept_setting.vue";
@@ -150,10 +151,8 @@ import new_tour_sbjectives from "./dashboard/tour_users/new_tour_sbjectives.vue"
 import objectives_edit from "./dashboard/tour_users/objectives_edit.vue"
 //import { localStorageService } from "./helper.js";
 
-//user_manuals
-import new_user_manuals from "./dashboard/user_manuals/add.vue";
-import user_manuals from "./dashboard/user_manuals/index.vue";
-import edit_user_manuals from "./dashboard/user_manuals/edit.vue";
+
+
 //Note: Projects 
 import projects from "./dashboard/projects/index.vue";
 import projectAdd from "./dashboard/projects/add.vue";
@@ -163,6 +162,19 @@ import priority_tasks from "./dashboard/priority_task/index.vue";
 import priority_task_add from "./dashboard/priority_task/add.vue";
 import priority_task_edit from "./dashboard/priority_task/edit.vue";
 import priority_task_not_update from "./dashboard/priority_task/not_update.vue";
+
+
+
+import menu_setup from "./dashboard/menu/index.vue";
+import new_menu from "./dashboard/menu/add.vue";
+import edit_menu from "./dashboard/menu/edit_menu.vue";
+
+import user_group from "./dashboard/menu/user_group.vue";
+import add_user_group from "./dashboard/menu/add_user_group.vue";
+import edit_user_group from "./dashboard/menu/edit_user_group.vue";
+import permission from "./dashboard/menu/permission.vue";
+
+
 Vue.use(Router);
 export default new Router({
   mode: "history",
@@ -204,7 +216,7 @@ export default new Router({
         },
         //department weekend
         { path: "/department_weekend", name: "department_weekend", component: department_weekend },
-        
+
         {
           path: "/edit_department/:id",
           name: "edit_department",
@@ -217,9 +229,6 @@ export default new Router({
         },
 
         //department
-        { path: "/new_user_manuals", name: "new_user_manuals", component: new_user_manuals },
-        { path: "/user_manuals", name: "user_manuals", component: user_manuals },
-        { path: "/edit_user_manuals/:id", name: "edit_user_manuals", component: edit_user_manuals },
 
         {
           path: "/work_follow_up/",
@@ -264,10 +273,25 @@ export default new Router({
           component: monthly_report_update_modifie,
         },
         {
-          path: "/department_templates/",
+          path: "/department_templates",
           name: "department_templates",
           component: department_templates,
         },
+
+        { path: "/dept_contribution", name: "dept_contribution", component: dept_contribution },
+
+
+        //menu
+        { path: "/menu_setup", name: "menu_setup", component: menu_setup },
+        //new_menu
+        { path: "/new_menu", name: "new_menu", component: new_menu },
+        { path: "/edit_menu/:id", name: "edit_menu", component: edit_menu },
+
+        { path: "/user_group", name: "user_group", component: user_group },
+        { path: "/add_user_group", name: "add_user_group", component: add_user_group },
+        { path: "/edit_user_group/:id", name: "edit_user_group", component: edit_user_group },
+        { path: "/permission/:id", name: "permission", component: permission },
+
 
         // users
         { path: "/production_emps", name: "production_emps", component: production_emps },
@@ -279,7 +303,7 @@ export default new Router({
         { path: "/new_user", name: "new_user", component: userAdd },
         { path: "/edit_user/:id", name: "edit_user", component: userEdit },
         { path: "/profile", name: "profile", component: profile },
-        { path: "/change_password", name: "change_password", component: change_password }, 
+        { path: "/change_password", name: "change_password", component: change_password },
         // daily_work
         { path: "/daily_work_old", name: "daily_work", component: daily_work },
         { path: "/new_task", name: "new_task", component: new_task },
@@ -398,12 +422,12 @@ export default new Router({
           path: "/edit_contact/:id",
           name: "edit_contact",
           component: edit_contact,
-        }, 
+        },
         {
           path: "/contact_details/:id",
           name: "contact_details",
           component: contact_details,
-        },                
+        },
         { path: "/mos_settings", name: "mos_settings", component: mos_settings },
         // tour_users
         { path: "/tour_users", name: "tour_users", component: tour_users },
@@ -412,16 +436,16 @@ export default new Router({
         { path: "/tour_plan_entry_calendar", name: "tour_plan_entry_calendar", component: tour_plan_entry_calendar },
         { path: "/tour_plan_objectives", name: "tour_plan_objectives", component: tour_plan_objectives },
         { path: "/new_tour_sbjectives", name: "new_tour_sbortjectives", component: new_tour_sbjectives },
-        { path: "/objectives_edit/:id", name: "objectives_edit", component: objectives_edit }, 
+        { path: "/objectives_edit/:id", name: "objectives_edit", component: objectives_edit },
         //Note: Projects
-        { path: "/projects", name: "projects", component: projects },  
+        { path: "/projects", name: "projects", component: projects },
         { path: "/new_projects", name: "new_projects", component: projectAdd },
         //priority_tasks  
-        { path: "/priority_tasks", name: "priority_tasks", component: priority_tasks },  
-        { path: "/priority_task_add", name: "priority_task_add", component: priority_task_add },    
-        { path: "/priority_task_edit/:id", name: "priority_task_edit", component: priority_task_edit },   
-        { path: "/priority_task_not_update", name: "priority_task_not_update", component: priority_task_not_update },   
-         
+        { path: "/priority_tasks", name: "priority_tasks", component: priority_tasks },
+        { path: "/priority_task_add", name: "priority_task_add", component: priority_task_add },
+        { path: "/priority_task_edit/:id", name: "priority_task_edit", component: priority_task_edit },
+        { path: "/priority_task_not_update", name: "priority_task_not_update", component: priority_task_not_update },
+
       ],
     },
     {

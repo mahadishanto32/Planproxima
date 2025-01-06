@@ -516,6 +516,14 @@ class MOSAPIController extends AppBaseController
     {
         $user_data = Auth::user();
         //return $this->sendResponse( $user_data, 'K P I S retrieved successfully');
+        if($user_data->role_id ==  1 &&  $request->dept_id ==""){
+            return $this->sendResponse(
+                0,
+                "K P I S retrieved successfully"
+            );
+
+        }
+
         if ($request->dept_id) {
             $dept_id = $request->dept_id;
         } else {

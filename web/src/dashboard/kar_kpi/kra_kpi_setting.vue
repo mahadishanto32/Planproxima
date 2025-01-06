@@ -14,7 +14,6 @@
                                         </li>
                                         <li class="breadcrumb-item active">Settings KRA, KPI and MOS
                                         </li>
-
                                     </ol>
                                 </div>
                             </div>
@@ -40,7 +39,7 @@
                                         </fieldset>
                                     </div>
 
-                                    <div class="ccol-sm-6 col-lg-2" v-if="role_id == 5 || role_id == 6">
+                                    <div class="ccol-sm-6 col-lg-2" v-if="role_id == 1 || role_id == 5 || role_id == 6">
                                         <label for="users-list-verified">Wings</label>
                                         <fieldset class="form-group">
                                             <select class="form-control" v-on:change="changeEmployee()"
@@ -52,7 +51,7 @@
                                             </select>
                                         </fieldset>
                                     </div>
-                                    <div class="col-sm-6 col-lg-2" v-if="role_id == 5 || role_id == 6">
+                                    <div class="col-sm-6 col-lg-2" v-if="role_id == 1 || role_id == 5 || role_id == 6">
                                         <label for="users-list-verified">Employee</label>
                                         <fieldset class="form-group">
                                             <Select2 placeholder="Select One" v-on:change="getItemsData()"
@@ -116,7 +115,7 @@
                                                                         <div class="controls">
                                                                             <input type="text" v-model="item.name"
                                                                                 class="form-control"
-                                                                                placeholder="Entry kpi">
+                                                                                placeholder="Entry KPI">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -146,7 +145,7 @@
                                                                 <label class="text-gray-600 font-semibold text-lg">MOS
                                                                     {{ m + 1 }}</label>
                                                                 <div class="row">
-                                                                    <div class="col-md-5">
+                                                                    <div class="col-md-2">
                                                                         <div class="form-group">
                                                                             <div class="controls">
                                                                                 <input type="text" v-model="row.name"
@@ -155,6 +154,21 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                    <div class="col-md-2">
+
+                                                                        <div class="form-group">
+                                                                            <div class="controls">
+                                                                                <input type="text" v-model="row.weightage"
+                                                                                    class="form-control"
+                                                                                    placeholder="MOS WEIGHTAGE">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                    
+
+                                                                    
                                                                 </div>
                                                             </div>
 
@@ -165,33 +179,7 @@
                                             </form>
                                         </div>
 
-
-                                        <!-- COPY KRA KPI MOD AREA --->
-                                        <div class="row">
-                                            <div class="col-md-4 text-right">
-                                                <br>
-                                                <h4 class="card-title">COPYING DETAILS KRA, KPI and MOS</h4>
-                                            </div>
-
-                                            <div class="col-md-2">
-                                                <!--DATA COPY FROM TO YEAR-->
-                                                <label for="">From Year</label>
-                                                <input type="text" name="" v-model="fromYear" readonly="readonly"
-                                                    class="form-control">
-                                            </div>
-
-                                            <div class="col-md-2">
-                                                <label for="">To Year</label>
-                                                <input type="text" name="" v-model="toYear" readonly="readonly"
-                                                    class="form-control">
-                                            </div>
-
-                                            <div class="col-md-1">
-                                                <label for=""></label><br>
-                                                <button class="btn btn-success" @click="copyKraKpiMos()">COPY</button>
-                                            </div>
-                                        </div>
-                                        <br>
+                                        
                                     </div>
 
                                 </div>
@@ -736,7 +724,7 @@ export default {
                 children: [{
                     name: '',
                     kpi_weight: 0,
-                    children: [{ name: '', }],
+                    children: [{ name: '', weightage : ''}],
                 },
                 ],
             },
@@ -794,8 +782,8 @@ export default {
         this.filterForm.dept_id = this.user_data.dept_id;
         this.getDept();
         this.getWing();
-        this.getItems();
-        this.getYearWiseKraKpiMosItems();
+        //this.getItems();
+        /////this.getYearWiseKraKpiMosItems();
     },
     methods: {
         getItemsData() {

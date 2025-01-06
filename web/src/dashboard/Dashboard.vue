@@ -517,7 +517,7 @@ export default {
             enabled: false,
           },
           title: {
-            text: 'Yearly Achievement (Monthly)',
+            text: 'Target vs Achievement',
             align: 'center',
           },
           stroke: {
@@ -683,7 +683,7 @@ export default {
     // this.current_monthstr = this.current_month.toLowerCase()
     console.log('--------0000-yy--ttt-------------------------------------------');
     this.getTargetAchievement()
-    this.getMydeptInfo(this.dept_id)
+    // this.getMydeptInfo(this.dept_id)
     this.getWing()
     axios
       .get(this.api_url + 'quick-link-list/' + this.user_data.id, {
@@ -708,30 +708,7 @@ export default {
     }
     //this.fetchUserManual();
 
-    axios
-      .get(this.api_url + 'user_manual', {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: this.token ? `Bearer ${this.token}` : '',
-        },
-      })
-      .then((res) => {
-        this.userManuals = res.data.data
-
-        if (localStorage.hasOwnProperty('user_manual')) {
-          let localStorageUserManual = this.$localStorage.get('user_manual')
-          let localStorageUserManualParse = JSON.parse(localStorageUserManual)
-          if (
-            localStorageUserManualParse.created_at != res.data.data.created_at
-          ) {
-            this.$localStorage.set('user_manual', JSON.stringify(res.data.data))
-            this.show_pop_permission()
-          }
-        } else {
-          this.$localStorage.set('user_manual', JSON.stringify(res.data.data))
-          this.show_pop_permission()
-        }
-      })
+     
   },
   methods: {
     async dailyTask() {
@@ -922,31 +899,19 @@ export default {
       this.getEmployee()
       this.filter_data()
     },
-    async getMydeptInfo(id) {
-      await axios
-        .get(this.api_url + 'departments/' + id, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: this.token ? `Bearer ${this.token}` : '',
-          },
-        })
-        .then(({ data }) => {
-          this.deptInfo = data.data
-        })
-    },
-    fetchUserManual() {
-      axios
-        .get(this.api_url + 'user_manuals', {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: this.token ? `Bearer ${this.token}` : '',
-          },
-        })
-        .then((res) => {
-          console.log('userManuals', res.data.data)
-          this.userManuals = res.data.data
-        })
-    },
+    // async getMydeptInfo(id) {
+    //   await axios
+    //     .get(this.api_url + 'departments/' + id, {
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         Authorization: this.token ? `Bearer ${this.token}` : '',
+    //       },
+    //     })
+    //     .then(({ data }) => {
+    //       this.deptInfo = data.data
+    //     })
+    // },
+ 
 
     show_pop_permission() {
       this.$modal.show('popup-permission')

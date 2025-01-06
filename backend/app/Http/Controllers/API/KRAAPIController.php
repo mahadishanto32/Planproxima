@@ -530,6 +530,7 @@ class KRAAPIController extends AppBaseController
                     if ($mosArray[$key2]['name'] != '') {
                         $mos = array(
                             'mos_name' => $mosArray[$key2]['name'],
+                            'weightage' => $mosArray[$key2]['weightage'],
                             'dept_id'  =>   $department->id,
                             'kra_id'   =>    $kRA->id,
                             'kpi_id'   =>    $kpi_id->id,

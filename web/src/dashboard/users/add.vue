@@ -36,7 +36,7 @@
                                                 <div class="col-md-8">
                                                     
                                                     <div  class="form-group">
-                                                        <label for="Profession">Role</label>
+                                                        <label for="Profession">Role  </label>
                                                         <div class="controls">
                                                             <select  id="Profession" name="role_id"   v-model="addForm.role_id" :class="{  'is-invalid': addForm.errors.has('type'),  }" class="form-control">
                                                                 <option value="">Select one</option>
@@ -134,6 +134,7 @@ export default {
         api_url: window.api_url,    
         DepartmentsItems : [],
         token: this.$localStorage.get("d_token"),
+        userData :  JSON.parse(this.$localStorage.get("user")),
         addForm: new Form({ 
             name: "",  
             email : "",   
@@ -149,7 +150,9 @@ export default {
     };
   },
   created() { 
+    console.log(this.userData.dept_id);
     this.getRole();
+    this.addForm.dept_id =  this.userData.dept_id ,
     this.dept();
   },
   methods: { 
