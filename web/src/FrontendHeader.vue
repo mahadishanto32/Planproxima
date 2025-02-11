@@ -185,6 +185,9 @@
           <li class="nav-item mr-auto">
             <a class="navbar-brand" href="../">
               <div class="brand-logo">
+                <div>
+                <h4 class="brand-text">Plan Proxima</h4>
+              </div>
                 <!-- <img class="logo" :src="base_url + 'assets/app-assets/images/logo/logo.png'"  alt="Logo" /> -->
               </div>
             </a>

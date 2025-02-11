@@ -52,6 +52,7 @@
                       role_id == 6 ||
                       role_id == 7 ||
                       role_id == 10 ||
+                      role_id == 16 ||
                       user_data.id == 24) &&
                     user_data.dept_id != 8
                   "
@@ -125,22 +126,22 @@
                     </router-link>
                     &nbsp;
                     <!-- <router-link
-                                            v-if="route.route == 'add_daily_work' && deptInfo.template_setting == 2 && (role_id == 3 || role_id == 5)"
-                                            :to="{ path: '/new_task' }" class="btn btn-secondary btn-sm quicklink">
-                                            New Work Schedule
-                                        </router-link>
-                                        <router-link
-                                            v-if="route.route == 'add_daily_work' && deptInfo.template_setting == 1 || (role_id == 6 || role_id == 7 || role_id == 10 || user_data.id == 24)"
-                                            :to="{ path: '/add_daily_work' }" class="btn btn-secondary btn-sm quicklink">
-                                            New Work Schedule
-                                        </router-link> -->
+                      v-if="route.route == 'add_daily_work' && deptInfo.template_setting == 2 && (role_id == 3 || role_id == 5)"
+                      :to="{ path: '/new_task' }" class="btn btn-secondary btn-sm quicklink">
+                      New Work Schedule
+                  </router-link>
+                  <router-link
+                      v-if="route.route == 'add_daily_work' && deptInfo.template_setting == 1 || (role_id == 6 || role_id == 7 || role_id == 10 || user_data.id == 24)"
+                      :to="{ path: '/add_daily_work' }" class="btn btn-secondary btn-sm quicklink">
+                      New Work Schedule
+                  </router-link> -->
                   </li>
                 </ul>
               </div>
               <div class="row border rounded mb-2">
                 <div
                   class="col-12 col-sm-6 col-lg-2"
-                  v-if="deptItems.length > 1"
+                  v-if="deptItems.length > 1 && role_id == 1 || role_id == 2"
                 >
                   <div class="mb-2">
                     <label for="users-list-verified"> Department </label>
@@ -229,7 +230,8 @@
                     role_id == 3 ||
                     role_id == 4 ||
                     role_id == 8 ||
-                    role_id == 5
+                    role_id == 5 ||
+                    role_id == 16
                   "
                 >
                   <div class="card card_box">
@@ -250,7 +252,8 @@
                     role_id == 3 ||
                     role_id == 4 ||
                     role_id == 8 ||
-                    role_id == 5
+                    role_id == 5 ||
+                    role_id == 16    
                   "
                 >
                   <div class="card card_box">
